@@ -6,7 +6,8 @@
       "Bash(bash *)",
       "mcp__windows-mcp__PowerShell",
       "Bash(git add *)",
-      "Bash(git commit -m ' *)"
+      "Bash(git commit -m ' *)",
+      "WebFetch(domain:bitcoin.org)"
     ]
   }
 }
