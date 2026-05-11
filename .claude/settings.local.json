@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:www.doubao.com)",
+      "mcp__windows-mcp__Scrape",
+      "Bash(bash *)",
+      "mcp__windows-mcp__PowerShell",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)"
+    ]
+  }
+}
