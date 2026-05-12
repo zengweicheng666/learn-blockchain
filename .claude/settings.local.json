@@ -15,7 +15,20 @@
       "WebFetch(domain:cloud.tencent.com.cn)",
       "Bash(npm -v)",
       "Bash(node *)",
-      "Bash(npx tsx *)"
+      "Bash(npx tsx *)",
+      "Bash(mkdir -p \"D:\\\\Work-Blockchain\\\\learnspace\\\\projects\\\\erc20-token\")",
+      "Bash(npm init *)",
+      "Bash(npm install *)",
+      "Bash(npx hardhat *)",
+      "Bash(npm pkg *)",
+      "Bash(npm view *)",
+      "Bash(rm -rf node_modules package-lock.json)",
+      "Bash(npm info *)",
+      "Bash(cat .gitignore)",
+      "Bash(echo \"---EXIT:$?\")",
+      "WebFetch(domain:ethereum.org)",
+      "Bash(npx --yes tsx projects/merkle-tree/test.ts)",
+      "Bash(git log *)"
     ]
   }
 }
