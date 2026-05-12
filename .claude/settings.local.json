@@ -12,7 +12,10 @@
       "WebSearch",
       "WebFetch(domain:preethikasireddy.webflow.io)",
       "WebFetch(domain:continuingedupdate.blogspot.com)",
-      "WebFetch(domain:cloud.tencent.com.cn)"
+      "WebFetch(domain:cloud.tencent.com.cn)",
+      "Bash(npm -v)",
+      "Bash(node *)",
+      "Bash(npx tsx *)"
     ]
   }
 }
