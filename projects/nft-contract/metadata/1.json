@@ -1,0 +1,9 @@
+{
+  "name": "MyNFT #1",
+  "description": "阶段二学习成果 - 第一个 NFT",
+  "image": "https://placehold.co/400x400/2563eb/ffffff?text=NFT+%231",
+  "attributes": [
+    { "trait_type": "Week", "value": "4" },
+    { "trait_type": "Topic", "value": "ERC721" }
+  ]
+}

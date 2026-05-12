@@ -28,7 +28,10 @@
       "Bash(echo \"---EXIT:$?\")",
       "WebFetch(domain:ethereum.org)",
       "Bash(npx --yes tsx projects/merkle-tree/test.ts)",
-      "Bash(git log *)"
+      "Bash(git log *)",
+      "Bash(git remote *)",
+      "Bash(git push *)",
+      "Bash(git commit *)"
     ]
   }
 }
