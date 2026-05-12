@@ -1,66 +1,14 @@
-# 区块链学习计划 · 阶段二：Solidity + Mini 项目（第 4-8 周）
+# 区块链学习计划 · 阶段二：Solidity + Mini 项目（第 4-7 周）
 
-> **说明：** 每周一个 Mini 项目，每周末有可展示的交付物。Hardhat 作为主力开发框架。每个合约必须有单元测试。
+> **说明：** 每周一个 Mini 项目，每周末有可展示的交付物。Hardhat 作为主力开发框架。每个合约必须有单元测试。原第 4 周（ERC20 代币）已在阶段一完成。
 
 **目标：** 掌握 Solidity 语言，写出经过测试的安全合约，部署到 Sepolia 测试网
 
-**前置条件：** 已完成阶段一，有 Remix 使用经验
+**前置条件：** 已完成阶段一，有 Remix 使用 + Hardhat + ERC20 开发经验
 
 ---
 
-## 第四周：ERC20 代币合约
-
-### 技术预学（第 1-2 天）
-
-- [ ] **第 1 天：Solidity 基础语法**
-  - 安装 Hardhat：`npm init -y && npm install hardhat @nomicfoundation/hardhat-toolbox && npx hardhat init`
-  - 学：类型（uint、address、string、mapping、struct）、可见性（public/internal/external/private）
-  - 练：写一个简单合约，用 mapping 存储地址到余额的映射
-  - **产出：** `projects/erc20-token/hardhat.config.js` + 基础测试环境跑通
-
-- [ ] **第 2 天：ERC20 标准接口**
-  - 学：ERC20 标准函数（totalSupply、balanceOf、transfer、approve、transferFrom、allowance）
-  - 学：OpenZeppelin 的 ERC20 合约集成
-  - 练：`npm install @openzeppelin/contracts`，写一个继承 OpenZeppelin ERC20 的代币合约
-  - 写一个基础测试：部署合约，检查 name/symbol/decimals
-  - **产出：** `contracts/MyToken.sol` + `test/MyToken.test.js`
-
-### 项目开发（第 3-5 天）
-
-- [ ] **第 3 天：实现完整 ERC20 功能**
-  - 添加 `mint(address to, uint amount)` 函数（仅 owner 可调用）
-  - 添加 `burn(uint amount)` 函数（任何持币者可销毁自己的币）
-  - 添加 `Transfer` 事件追踪
-  - 写测试：正常转账、余额不足转账（应 revert）、approve + transferFrom 流程
-  - **产出：** 完整的 ERC20 合约 + 测试覆盖率 80%+
-
-- [ ] **第 4 天：安全加固 + 部署**
-  - 检查：重入防护、溢出防护（Solidity 0.8+ 自带但确认）、权限控制
-  - 写部署脚本：`scripts/deploy.js`，部署到本地 Hardhat Network
-  - 部署到 Sepolia 测试网
-  - **产出：** 已在 Sepolia 验证的 ERC20 合约
-
-- [ ] **第 5 天：合约验证 + 交互**
-  - 在 etherscan 上验证合约源码（hardhat-etherscan 插件）
-  - 在 Remix 或 etherscan 的 Write Contract 面板中 mint 和 transfer
-  - 写一个简单前端脚本（Node.js + ethers.js）：连接合约，查询余额
-  - **产出：** 已验证的合约 + 前端交互脚本
-
-### 复盘（第 6-7 天）
-
-- [ ] **第 6-7 天：完善文档 + 复盘**
-  - 写 README：项目说明、合约地址、功能列表
-  - 整理代码，确保测试全部通过
-  - 提交到 GitHub
-  - **复盘检查清单：**
-    - [ ] ERC20 标准接口全部实现
-    - [ ] 测试覆盖了正常路径 + 异常路径（余额不足、授权不足）
-    - [ ] 合约在 Sepolia 上已验证
-    - [ ] README 完整
-
----
-
-## 第五周：NFT 铸造合约（ERC721）
+## 第四周：NFT 铸造合约（ERC721）
 
 ### 技术预学（第 1 天）
 
@@ -110,7 +58,7 @@
 
 ---
 
-## 第六周：拍卖合约
+## 第五周：拍卖合约
 
 ### 技术预学（第 1 天）
 
@@ -159,7 +107,7 @@
 
 ---
 
-## 第七周：简易 AMM 去中心化交易所
+## 第六周：简易 AMM 去中心化交易所
 
 ### 技术预学（第 1-2 天）
 
@@ -210,7 +158,7 @@
 
 ---
 
-## 第八周：DAO 投票合约
+## 第七周：DAO 投票合约
 
 ### 技术预学（第 1 天）
 
@@ -250,12 +198,12 @@
 ### 阶段复盘（第 6-7 天）
 
 - [ ] **第 6-7 天：阶段二大复盘**
-  - 整理 5 个项目的 README，统一格式
+  - 整理 4 个项目的 README，统一格式
   - 确保所有代码已推送 GitHub
-  - 发布第七篇技术文章："智能合约安全红线：我在写 5 个合约后总结的清单"
+  - 发布第七篇技术文章："智能合约安全红线：我在写 4 个合约后总结的清单"
   - **阶段二复盘检查清单：**
-    - [ ] 5 个合约项目全部完成、测试覆盖 80%+
+    - [ ] 4 个合约项目全部完成、测试覆盖 80%+
     - [ ] 所有合约已部署到 Sepolia 测试网并验证
-    - [ ] GitHub 上有完整的 5 个仓库/目录
+    - [ ] GitHub 上有完整的 4 个仓库/目录
     - [ ] 能说出 5 种以上智能合约攻击模式及防护方法
     - [ ] 对 Hardhat 开发流程已熟练
