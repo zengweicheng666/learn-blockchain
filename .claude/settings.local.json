@@ -9,7 +9,10 @@
       "Bash(git commit -m ' *)",
       "WebFetch(domain:bitcoin.org)",
       "WebFetch(domain:medium.com)",
-      "WebSearch"
+      "WebSearch",
+      "WebFetch(domain:preethikasireddy.webflow.io)",
+      "WebFetch(domain:continuingedupdate.blogspot.com)",
+      "WebFetch(domain:cloud.tencent.com.cn)"
     ]
   }
 }
