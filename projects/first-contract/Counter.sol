@@ -12,7 +12,7 @@ pragma solidity ^0.8.28;
  * - getCount()   查看当前计数
  *
  * 事件：
- * - CountChanged(uint newCount)  每次计数变化时触发
+ * - CountChanged(address indexed who, uint newCount)  每次计数变化时触发
  */
 
 contract Counter {
@@ -20,7 +20,7 @@ contract Counter {
     uint256 private count;
 
     // ── 事件 ────────────────────────────────────────────
-    event CountChanged(uint256 newCount);
+    event CountChanged(address indexed who, uint256 newCount);
 
     // ── 构造函数 ──────────────────────────────────────
     constructor() {
@@ -30,18 +30,18 @@ contract Counter {
     // ── 写函数 ─────────────────────────────────────────
     function increment() external {
         count += 1;
-        emit CountChanged(count);
+        emit CountChanged(msg.sender, count);
     }
 
     function decrement() external {
         require(count > 0, "Counter: 不能低于 0");
         count -= 1;
-        emit CountChanged(count);
+        emit CountChanged(msg.sender, count);
     }
 
     function reset() external {
         count = 0;
-        emit CountChanged(count);
+        emit CountChanged(msg.sender, count);
     }
 
     // ── 读函数 ─────────────────────────────────────────
