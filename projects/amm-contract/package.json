@@ -1,0 +1,14 @@
+{
+  "name": "amm-contract",
+  "version": "1.0.0",
+  "main": "hardhat.config.js",
+  "scripts": {
+    "test": "npx hardhat test"
+  },
+  "dependencies": {
+    "@nomicfoundation/hardhat-toolbox": "hh2",
+    "@openzeppelin/contracts": "^5.6.1",
+    "hardhat": "^2.28.6",
+    "dotenv": "^16.4.7"
+  }
+}
