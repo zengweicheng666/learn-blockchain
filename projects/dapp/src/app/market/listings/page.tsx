@@ -193,14 +193,16 @@ export default function ListingsPage() {
         </p>
       </div>
 
-      {!isConnected && (
+      {isConnected ? (
+        <>
+          <ListItemForm />
+          <LookupListing />
+        </>
+      ) : (
         <p className="text-center text-sm text-zinc-400">
           Connect your wallet to list or buy NFTs.
         </p>
       )}
-
-      <ListItemForm />
-      <LookupListing />
     </div>
   );
 }

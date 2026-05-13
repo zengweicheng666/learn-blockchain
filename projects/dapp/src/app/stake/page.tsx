@@ -325,22 +325,21 @@ export default function StakePage() {
         </p>
       </div>
 
-      {!isConnected && (
+      {isConnected ? (
+        <>
+          <StakingDashboard />
+          <EventFeed />
+          <div className="grid gap-6 md:grid-cols-2">
+            <StakeForm />
+            <UnstakeForm />
+          </div>
+          <AccrueYieldButton />
+        </>
+      ) : (
         <p className="text-center text-sm text-zinc-400">
           Connect your wallet to stake, unstake, or accrue yield.
         </p>
       )}
-
-      <StakingDashboard />
-
-      <EventFeed />
-
-      <div className="grid gap-6 md:grid-cols-2">
-        <StakeForm />
-        <UnstakeForm />
-      </div>
-
-      <AccrueYieldButton />
     </div>
   );
 }

@@ -68,34 +68,35 @@ export default function MarketPage() {
         </p>
       </div>
 
-      <MarketOverview />
-
-      {!isConnected && (
+      {isConnected ? (
+        <>
+          <MarketOverview />
+          <div className="grid gap-4 md:grid-cols-3">
+            <Link
+              href="/market/listings"
+              className="rounded-lg border border-zinc-200 p-4 text-sm font-medium transition hover:border-blue-300 hover:text-blue-600"
+            >
+              Browse Listings &rarr;
+            </Link>
+            <Link
+              href="/market/auctions"
+              className="rounded-lg border border-zinc-200 p-4 text-sm font-medium transition hover:border-blue-300 hover:text-blue-600"
+            >
+              Browse Auctions &rarr;
+            </Link>
+            <Link
+              href="/market/my"
+              className="rounded-lg border border-zinc-200 p-4 text-sm font-medium transition hover:border-blue-300 hover:text-blue-600"
+            >
+              My Items &rarr;
+            </Link>
+          </div>
+        </>
+      ) : (
         <p className="text-center text-sm text-zinc-400">
           Connect your wallet to list, buy, or bid on NFTs.
         </p>
       )}
-
-      <div className="grid gap-4 md:grid-cols-3">
-        <Link
-          href="/market/listings"
-          className="rounded-lg border border-zinc-200 p-4 text-sm font-medium transition hover:border-blue-300 hover:text-blue-600"
-        >
-          Browse Listings &rarr;
-        </Link>
-        <Link
-          href="/market/auctions"
-          className="rounded-lg border border-zinc-200 p-4 text-sm font-medium transition hover:border-blue-300 hover:text-blue-600"
-        >
-          Browse Auctions &rarr;
-        </Link>
-        <Link
-          href="/market/my"
-          className="rounded-lg border border-zinc-200 p-4 text-sm font-medium transition hover:border-blue-300 hover:text-blue-600"
-        >
-          My Items &rarr;
-        </Link>
-      </div>
     </div>
   );
 }

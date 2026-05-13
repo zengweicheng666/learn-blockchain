@@ -243,7 +243,7 @@ function ProposalList() {
   const total = Number(count ?? 0);
   if (total === 0) return <p className="text-sm text-zinc-400">No proposals yet.</p>;
 
-  const ids = Array.from({ length: total }, (_, i) => i + 1);
+  const ids = Array.from({ length: total }, (_, i) => i);
   return (
     <div className="space-y-3">
       {ids.map((id) => (
@@ -337,16 +337,18 @@ export default function DaoPage() {
         </p>
       </div>
 
-      {!isConnected && (
+      {isConnected ? (
+        <>
+          <DaoStats />
+          <EventFeed />
+          <NewProposal />
+          <ProposalList />
+        </>
+      ) : (
         <p className="text-center text-sm text-zinc-400">
           Connect your wallet to create proposals and vote.
         </p>
       )}
-
-      <DaoStats />
-      <EventFeed />
-      <NewProposal />
-      <ProposalList />
     </div>
   );
 }

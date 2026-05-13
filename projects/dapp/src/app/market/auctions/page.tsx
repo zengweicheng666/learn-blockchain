@@ -263,14 +263,16 @@ export default function AuctionsPage() {
         </p>
       </div>
 
-      {!isConnected && (
+      {isConnected ? (
+        <>
+          <CreateAuctionForm />
+          <LookupAuction />
+        </>
+      ) : (
         <p className="text-center text-sm text-zinc-400">
           Connect your wallet to create or bid on auctions.
         </p>
       )}
-
-      <CreateAuctionForm />
-      <LookupAuction />
     </div>
   );
 }
