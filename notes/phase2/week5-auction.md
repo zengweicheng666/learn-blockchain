@@ -74,6 +74,19 @@ projects/auction-contract/
 - `evm_increaseTime`：快进区块时间
 - `evm_mine`：挖出新区块
 
+## 运行测试
+
+```bash
+# 运行全部测试
+npx hardhat test
+
+# 指定测试文件
+npx hardhat test test/Auction.test.js
+
+# 显示 gas 报告
+npx hardhat test --gas
+```
+
 ## 测试覆盖（22 个）
 
 | 类别 | 测试 | 状态 |
