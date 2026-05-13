@@ -10,7 +10,7 @@
 | 第 2 周 | 共识机制 + 密码学 | PoS、DPoS、PBFT、CAP、ECC、数字签名、默克尔树 |
 | 第 3 周 | 以太坊 + 智能合约 | EVM、Gas、EIP-1559、交易生命周期、Counter 合约、Event |
 
-## 阶段二：Solidity 深度开发（第 4-7 周）🔜
+## 阶段二：Solidity 深度开发（第 4-7 周）✅
 
 | 周次 | 主题 | 项目 |
 |------|------|------|
@@ -31,9 +31,10 @@ learnspace/
 │   ├── erc20-token/          # Hardhat ERC20 代币项目
 │   ├── nft-contract/         # ERC721 NFT 铸造合约（白名单 + 公开销售）
 │   ├── auction-contract/     # 英式拍卖合约（Pull over Push）
-│   └── amm-contract/         # 恒定乘积 AMM 去中心化交易所
+│   ├── amm-contract/         # 恒定乘积 AMM 去中心化交易所
+│   └── dao-contract/         # DAO 投票治理合约
 ├── notes/                    # 每日学习笔记
-│   ├── phase2/               # 阶段二笔记
+│   ├── phase2/               # 阶段二笔记（NFT / 拍卖 / AMM / DAO）
 │   ├── day1-block-structure.md
 │   ├── day2-chain-structure.md
 │   ├── day3-hash.md
