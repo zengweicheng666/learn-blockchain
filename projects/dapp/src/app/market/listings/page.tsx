@@ -184,14 +184,6 @@ function LookupListing() {
 export default function ListingsPage() {
   const { isConnected } = useAccount();
 
-  if (!isConnected) {
-    return (
-      <div className="mx-auto max-w-3xl px-4 py-20 text-center text-zinc-500">
-        Connect your wallet to view and manage listings.
-      </div>
-    );
-  }
-
   return (
     <div className="mx-auto max-w-3xl space-y-8 px-4 py-10">
       <div>
@@ -200,6 +192,12 @@ export default function ListingsPage() {
           List NFTs for sale or browse existing listings
         </p>
       </div>
+
+      {!isConnected && (
+        <p className="text-center text-sm text-zinc-400">
+          Connect your wallet to list or buy NFTs.
+        </p>
+      )}
 
       <ListItemForm />
       <LookupListing />

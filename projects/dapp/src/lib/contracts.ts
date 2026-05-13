@@ -210,8 +210,8 @@ export const STAKING_ABI = [
   {anonymous:false,inputs:[{indexed:false,internalType:"uint256",name:"yieldAmount",type:"uint256"},{indexed:false,internalType:"uint256",name:"newTotalEthStaked",type:"uint256"}],name:"YieldAccrued",type:"event"},
 ] as const;
 
-export const MARKETPLACE_ADDRESS = "0x...";
-export const AUCTION_MANAGER_ADDRESS = "0x...";
+export const MARKETPLACE_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+export const AUCTION_MANAGER_ADDRESS = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
 
 export const MARKETPLACE_ABI = [
   { inputs: [{ internalType: "uint256", name: "_initialFee", type: "uint256" }], stateMutability: "nonpayable", type: "constructor" },

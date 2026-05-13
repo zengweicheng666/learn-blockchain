@@ -59,14 +59,6 @@ function MarketOverview() {
 export default function MarketPage() {
   const { isConnected } = useAccount();
 
-  if (!isConnected) {
-    return (
-      <div className="mx-auto max-w-3xl px-4 py-20 text-center text-zinc-500">
-        Connect your wallet to explore the NFT Marketplace.
-      </div>
-    );
-  }
-
   return (
     <div className="mx-auto max-w-3xl space-y-8 px-4 py-10">
       <div>
@@ -77,6 +69,12 @@ export default function MarketPage() {
       </div>
 
       <MarketOverview />
+
+      {!isConnected && (
+        <p className="text-center text-sm text-zinc-400">
+          Connect your wallet to list, buy, or bid on NFTs.
+        </p>
+      )}
 
       <div className="grid gap-4 md:grid-cols-3">
         <Link

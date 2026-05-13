@@ -316,14 +316,6 @@ function EventFeed() {
 export default function StakePage() {
   const { isConnected } = useAccount();
 
-  if (!isConnected) {
-    return (
-      <div className="mx-auto max-w-3xl px-4 py-20 text-center text-zinc-500">
-        Connect your wallet to interact with Liquid Staking.
-      </div>
-    );
-  }
-
   return (
     <div className="mx-auto max-w-3xl space-y-8 px-4 py-10">
       <div>
@@ -332,6 +324,12 @@ export default function StakePage() {
           Stake ETH and receive stETH that accumulates yield
         </p>
       </div>
+
+      {!isConnected && (
+        <p className="text-center text-sm text-zinc-400">
+          Connect your wallet to stake, unstake, or accrue yield.
+        </p>
+      )}
 
       <StakingDashboard />
 

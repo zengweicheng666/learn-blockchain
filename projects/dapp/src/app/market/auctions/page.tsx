@@ -254,14 +254,6 @@ function LookupAuction() {
 export default function AuctionsPage() {
   const { isConnected } = useAccount();
 
-  if (!isConnected) {
-    return (
-      <div className="mx-auto max-w-3xl px-4 py-20 text-center text-zinc-500">
-        Connect your wallet to participate in auctions.
-      </div>
-    );
-  }
-
   return (
     <div className="mx-auto max-w-3xl space-y-8 px-4 py-10">
       <div>
@@ -270,6 +262,12 @@ export default function AuctionsPage() {
           Create new auctions or bid on existing ones
         </p>
       </div>
+
+      {!isConnected && (
+        <p className="text-center text-sm text-zinc-400">
+          Connect your wallet to create or bid on auctions.
+        </p>
+      )}
 
       <CreateAuctionForm />
       <LookupAuction />

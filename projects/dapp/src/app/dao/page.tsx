@@ -328,14 +328,6 @@ function EventFeed() {
 export default function DaoPage() {
   const { isConnected } = useAccount();
 
-  if (!isConnected) {
-    return (
-      <div className="mx-auto max-w-3xl px-4 py-20 text-center text-zinc-500">
-        Connect your wallet to interact with the DAO.
-      </div>
-    );
-  }
-
   return (
     <div className="mx-auto max-w-3xl space-y-8 px-4 py-10">
       <div>
@@ -344,6 +336,12 @@ export default function DaoPage() {
           Interact with SimpleDAO on Hardhat local network
         </p>
       </div>
+
+      {!isConnected && (
+        <p className="text-center text-sm text-zinc-400">
+          Connect your wallet to create proposals and vote.
+        </p>
+      )}
 
       <DaoStats />
       <EventFeed />
