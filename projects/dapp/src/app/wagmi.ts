@@ -21,4 +21,5 @@ export const config = createConfig({
     [sepolia.id]: http(),
   },
   ssr: true,
+  autoConnect: true,
 });
