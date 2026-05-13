@@ -19,6 +19,15 @@
 | 第 6 周 | AMM | 恒定乘积做市商 x*y=k |
 | 第 7 周 | DAO | 投票治理合约 |
 
+## 阶段三：全栈 DApp 开发（第 9-16 周）🚧
+
+| 周次 | 主题 | 项目 |
+|------|------|------|
+| 第 9 周 | 前端工具链 | Wagmi + viem + RainbowKit 脚手架 ✅ |
+| 第 10 周 | DApp 核心交互 | 交易流程 / 事件监听 / The Graph |
+| 第 11-12 周 | 实战项目一 | 流动性质押协议 |
+| 第 13-16 周 | 实战项目二 | NFT 市场 / 期权协议 / 任务平台 |
+
 ## 项目结构
 
 ```
@@ -32,9 +41,11 @@ learnspace/
 │   ├── nft-contract/         # ERC721 NFT 铸造合约（白名单 + 公开销售）
 │   ├── auction-contract/     # 英式拍卖合约（Pull over Push）
 │   ├── amm-contract/         # 恒定乘积 AMM 去中心化交易所
-│   └── dao-contract/         # DAO 投票治理合约
+│   ├── dao-contract/         # DAO 投票治理合约
+│   └── dapp/                 # DApp 前端脚手架（Next.js + Wagmi + RainbowKit）
 ├── notes/                    # 每日学习笔记
 │   ├── phase2/               # 阶段二笔记（NFT / 拍卖 / AMM / DAO）
+│   ├── phase3/               # 阶段三笔记（Week 9-16）
 │   ├── day1-block-structure.md
 │   ├── day2-chain-structure.md
 │   ├── day3-hash.md
