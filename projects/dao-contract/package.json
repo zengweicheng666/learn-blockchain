@@ -6,9 +6,11 @@
     "test": "npx hardhat test"
   },
   "dependencies": {
-    "@nomicfoundation/hardhat-toolbox": "hh2",
     "@openzeppelin/contracts": "^5.6.1",
-    "hardhat": "^2.28.6",
     "dotenv": "^16.4.7"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^6.1.2",
+    "hardhat": "^2.28.6"
   }
 }
