@@ -10,15 +10,14 @@
 | 第 2 周 | 共识机制 + 密码学 | PoS、DPoS、PBFT、CAP、ECC、数字签名、默克尔树 |
 | 第 3 周 | 以太坊 + 智能合约 | EVM、Gas、EIP-1559、交易生命周期、Counter 合约、Event |
 
-## 阶段二：Solidity 深度开发（第 4-8 周）🔜
+## 阶段二：Solidity 深度开发（第 4-7 周）🔜
 
 | 周次 | 主题 | 项目 |
 |------|------|------|
-| 第 4 周 | ERC20 代币 | OpenZeppelin + Hardhat + Sepolia 部署 |
-| 第 5 周 | NFT 铸造 | ERC721 |
-| 第 6 周 | 拍卖合约 | 盲拍/英式拍卖 |
-| 第 7 周 | AMM | 简易去中心化交易所 |
-| 第 8 周 | DAO | 投票治理合约 |
+| 第 4 周 | NFT 铸造 | ERC721 白名单 + 公开销售 |
+| 第 5 周 | 拍卖合约 | 英式拍卖 + Pull over Push |
+| 第 6 周 | AMM | 恒定乘积做市商 x*y=k |
+| 第 7 周 | DAO | 投票治理合约 |
 
 ## 项目结构
 
@@ -29,8 +28,12 @@ learnspace/
 │   ├── hash-demo/            # SHA256 雪崩效应、PoW 模拟、ECDSA 签名
 │   ├── merkle-tree/          # 默克尔树 TS 实现 + 轻节点验证演示
 │   ├── first-contract/       # Solidity Counter 合约
-│   └── erc20-token/          # Hardhat ERC20 代币项目
+│   ├── erc20-token/          # Hardhat ERC20 代币项目
+│   ├── nft-contract/         # ERC721 NFT 铸造合约（白名单 + 公开销售）
+│   ├── auction-contract/     # 英式拍卖合约（Pull over Push）
+│   └── amm-contract/         # 恒定乘积 AMM 去中心化交易所
 ├── notes/                    # 每日学习笔记
+│   ├── phase2/               # 阶段二笔记
 │   ├── day1-block-structure.md
 │   ├── day2-chain-structure.md
 │   ├── day3-hash.md
