@@ -1,5 +1,6 @@
 export const DAO_ADDRESS = "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9";
 export const VOTE_TOKEN_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+export const STAKING_ADDRESS = "0x610178dA211FEF7D417bC0e6FeD39F05609AD788";
 
 export const VOTE_TOKEN_ABI = [
   { inputs: [], stateMutability: "nonpayable", type: "constructor" },
@@ -187,4 +188,24 @@ export const DAO_ABI = [
     name: "Voted",
     type: "event",
   },
+] as const;
+
+export const STAKING_ABI = [
+  {inputs:[{internalType:"address",name:"_owner",type:"address"}],stateMutability:"nonpayable",type:"constructor"},
+  {inputs:[],name:"accrueYield",outputs:[],stateMutability:"nonpayable",type:"function"},
+  {inputs:[],name:"apr",outputs:[{internalType:"uint256",name:"",type:"uint256"}],stateMutability:"view",type:"function"},
+  {inputs:[{internalType:"address",name:"account",type:"address"}],name:"balanceOf",outputs:[{internalType:"uint256",name:"",type:"uint256"}],stateMutability:"view",type:"function"},
+  {inputs:[],name:"getExchangeRate",outputs:[{internalType:"uint256",name:"",type:"uint256"}],stateMutability:"view",type:"function"},
+  {inputs:[],name:"lastYieldTimestamp",outputs:[{internalType:"uint256",name:"",type:"uint256"}],stateMutability:"view",type:"function"},
+  {inputs:[],name:"name",outputs:[{internalType:"string",name:"",type:"string"}],stateMutability:"view",type:"function"},
+  {inputs:[],name:"owner",outputs:[{internalType:"address",name:"",type:"address"}],stateMutability:"view",type:"function"},
+  {inputs:[{internalType:"uint256",name:"_apr",type:"uint256"}],name:"setApr",outputs:[],stateMutability:"nonpayable",type:"function"},
+  {inputs:[],name:"stake",outputs:[],stateMutability:"payable",type:"function"},
+  {inputs:[],name:"symbol",outputs:[{internalType:"string",name:"",type:"string"}],stateMutability:"view",type:"function"},
+  {inputs:[],name:"totalEthStaked",outputs:[{internalType:"uint256",name:"",type:"uint256"}],stateMutability:"view",type:"function"},
+  {inputs:[],name:"totalSupply",outputs:[{internalType:"uint256",name:"",type:"uint256"}],stateMutability:"view",type:"function"},
+  {inputs:[{internalType:"uint256",name:"stEthAmount",type:"uint256"}],name:"unstake",outputs:[],stateMutability:"nonpayable",type:"function"},
+  {anonymous:false,inputs:[{indexed:true,internalType:"address",name:"user",type:"address"},{indexed:false,internalType:"uint256",name:"ethAmount",type:"uint256"},{indexed:false,internalType:"uint256",name:"stEthAmount",type:"uint256"}],name:"Staked",type:"event"},
+  {anonymous:false,inputs:[{indexed:true,internalType:"address",name:"user",type:"address"},{indexed:false,internalType:"uint256",name:"stEthAmount",type:"uint256"},{indexed:false,internalType:"uint256",name:"ethAmount",type:"uint256"}],name:"Unstaked",type:"event"},
+  {anonymous:false,inputs:[{indexed:false,internalType:"uint256",name:"yieldAmount",type:"uint256"},{indexed:false,internalType:"uint256",name:"newTotalEthStaked",type:"uint256"}],name:"YieldAccrued",type:"event"},
 ] as const;

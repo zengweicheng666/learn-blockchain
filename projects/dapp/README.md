@@ -54,8 +54,15 @@ src/
 └── app/
     ├── layout.tsx      # 根布局 + Providers 注入
     ├── page.tsx        # 首页（钱包连接 + 链上数据展示）
+    ├── nav.tsx         # 导航栏（路由切换 + 钱包连接）
     ├── providers.tsx   # Wagmi + RainbowKit + ReactQuery Provider 封装
     ├── wagmi.ts       # Wagmi 配置（网络 / 传输 / 连接器）
+    ├── dao/
+    │   └── page.tsx    # DAO 治理交互页
+    ├── stake/
+    │   └── page.tsx    # Liquid Staking 质押页
+    ├── lib/
+    │   └── contracts.ts # 合约 ABI + 地址
     └── globals.css    # 全局样式
 ```
 
