@@ -23,7 +23,7 @@
 
 ```
 learnspace/
-├── projects/                 # 代码项目
+├── projects/                 # 代码项目（每个都有 README）
 │   ├── mini-blockchain/      # TypeScript 迷你区块链（Block + PoW + 验证）
 │   ├── hash-demo/            # SHA256 雪崩效应、PoW 模拟、ECDSA 签名
 │   ├── merkle-tree/          # 默克尔树 TS 实现 + 轻节点验证演示
