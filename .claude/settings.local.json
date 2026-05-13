@@ -1,6 +1,25 @@
 {
   "permissions": {
-	"alwaysAllow": [
+    "allow": [
+      "Bash(npx playwright *)",
+      "Bash(ls node_modules/@playwright/)",
+      "Bash(which playwright *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://127.0.0.1:8545)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000)",
+      "Bash(node -e ' *)",
+      "Bash(node *)",
+      "Bash(npm install *)",
+      "Bash(curl -s -X POST -H \"Content-Type: application/json\" -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"eth_blockNumber\",\"params\":[]}' http://127.0.0.1:8545)",
+      "Bash(curl -s -X POST -H \"Content-Type: application/json\" -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"eth_getCode\",\"params\":[\"0x5FbDB2315678afecb367f032d93F642f64180aa3\",\"latest\"]}' http://127.0.0.1:8545)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); r=d.get\\('result',''\\); print\\('MARKETPLACE:', 'deployed' if r and r != '0x' else 'NOT DEPLOYED'\\)\")",
+      "Bash(curl -s -X POST -H \"Content-Type: application/json\" -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"eth_getCode\",\"params\":[\"0x5FC8d32690cc91D4c39d9d3abcBD16989F875707\",\"latest\"]}' http://127.0.0.1:8545)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); r=d.get\\('result',''\\); print\\('DAO:', 'deployed' if r and r != '0x' else 'NOT DEPLOYED'\\)\")",
+      "Bash(curl -s -X POST -H \"Content-Type: application/json\" -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"eth_getCode\",\"params\":[\"0xa513E6E4b8f2a923D98304ec87F64353C4D5C853\",\"latest\"]}' http://127.0.0.1:8545)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); r=d.get\\('result',''\\); print\\('STAKING:', 'deployed' if r and r != '0x' else 'NOT DEPLOYED'\\)\")",
+      "Bash(curl *)",
+      "Bash(git add *)"
+    ],
+    "alwaysAllow": [
       "*"
     ]
   }
