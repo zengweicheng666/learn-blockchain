@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useReadContract } from "wagmi";
 import { formatEther } from "viem";
 import { useAccount } from "wagmi";
-import { MARKETPLACE_ABI, MARKETPLACE_ADDRESS, AUCTION_MANAGER_ABI, AUCTION_MANAGER_ADDRESS } from "@/lib/contracts";
+import { useContracts, MARKETPLACE_ABI, AUCTION_MANAGER_ABI, MARKETPLACE_ADDRESS, AUCTION_MANAGER_ADDRESS } from "@/lib/contracts";
 
 function StatCard({ label, value }: { label: string; value: string }) {
   return (
@@ -20,24 +20,28 @@ function MarketOverview() {
     address: MARKETPLACE_ADDRESS,
     abi: MARKETPLACE_ABI,
     functionName: "listingCount",
+    query: { enabled: !!MARKETPLACE_ADDRESS },
   });
 
   const { data: auctionCount } = useReadContract({
     address: AUCTION_MANAGER_ADDRESS,
     abi: AUCTION_MANAGER_ABI,
     functionName: "auctionCount",
+    query: { enabled: !!AUCTION_MANAGER_ADDRESS },
   });
 
   const { data: accumulatedFees } = useReadContract({
     address: MARKETPLACE_ADDRESS,
     abi: MARKETPLACE_ABI,
     functionName: "accumulatedFees",
+    query: { enabled: !!MARKETPLACE_ADDRESS },
   });
 
   const { data: platformFee } = useReadContract({
     address: MARKETPLACE_ADDRESS,
     abi: MARKETPLACE_ABI,
     functionName: "platformFee",
+    query: { enabled: !!MARKETPLACE_ADDRESS },
   });
 
   return (
@@ -56,19 +60,34 @@ function MarketOverview() {
   );
 }
 
+function NetworkWarning() {
+  return (
+    <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-center text-sm text-amber-800">
+      Marketplace contracts are only deployed on <strong>Hardhat Local</strong>. Switch your wallet network.
+    </div>
+  );
+}
+
 export default function MarketPage() {
   const { isConnected } = useAccount();
+  const { chainName, hasMarketplace } = useContracts();
 
   return (
     <div className="mx-auto max-w-3xl space-y-8 px-4 py-10">
       <div>
         <h1 className="text-2xl font-semibold">NFT Marketplace</h1>
         <p className="mt-1 text-sm text-zinc-500">
-          Browse fixed-price listings and live auctions
+          Browse fixed-price listings and live auctions ({chainName})
         </p>
       </div>
 
-      {isConnected ? (
+      {!isConnected ? (
+        <p className="text-center text-sm text-zinc-400">
+          Connect your wallet to list, buy, or bid on NFTs.
+        </p>
+      ) : !hasMarketplace ? (
+        <NetworkWarning />
+      ) : (
         <>
           <MarketOverview />
           <div className="grid gap-4 md:grid-cols-3">
@@ -92,10 +111,6 @@ export default function MarketPage() {
             </Link>
           </div>
         </>
-      ) : (
-        <p className="text-center text-sm text-zinc-400">
-          Connect your wallet to list, buy, or bid on NFTs.
-        </p>
       )}
     </div>
   );

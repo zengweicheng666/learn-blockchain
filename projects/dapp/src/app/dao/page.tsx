@@ -7,16 +7,7 @@ import {
   useWriteContract,
   useWatchContractEvent,
 } from "wagmi";
-import { DAO_ABI, DAO_ADDRESS } from "@/lib/contracts";
-
-const LABELS: Record<string, string> = {
-  Pending: "Pending",
-  Active: "Active",
-  Defeated: "Defeated",
-  Succeeded: "Succeeded",
-  Executed: "Executed",
-  Canceled: "Canceled",
-};
+import { useContracts, type DAO_ABI } from "@/lib/contracts";
 
 const STATE_COLORS: Record<string, string> = {
   Pending: "text-yellow-600 bg-yellow-50 border-yellow-200",
@@ -90,7 +81,7 @@ function TxStatus({
   );
 }
 
-function NewProposal() {
+function NewProposal({ dao }: { dao: { address: `0x${string}`; abi: typeof DAO_ABI } }) {
   const [target, setTarget] = useState("");
   const [description, setDescription] = useState("");
   const [txStatus, setTxStatus] = useState<
@@ -107,8 +98,8 @@ function NewProposal() {
     setTxStatus("pending");
     try {
       const hash = await writeContractAsync({
-        address: DAO_ADDRESS,
-        abi: DAO_ABI,
+        address: dao.address,
+        abi: dao.abi,
         functionName: "propose",
         args: [target as `0x${string}`, 0n, "0x" as `0x${string}`, description],
       });
@@ -148,7 +139,7 @@ function NewProposal() {
   );
 }
 
-function ProposalVote({ proposalId }: { proposalId: number }) {
+function ProposalVote({ proposalId, dao }: { proposalId: number; dao: { address: `0x${string}`; abi: typeof DAO_ABI } }) {
   const { writeContractAsync } = useWriteContract();
   const [txStatus, setTxStatus] = useState<
     "idle" | "pending" | "confirming" | "confirmed" | "error"
@@ -159,8 +150,8 @@ function ProposalVote({ proposalId }: { proposalId: number }) {
     setTxStatus("pending");
     try {
       const hash = await writeContractAsync({
-        address: DAO_ADDRESS,
-        abi: DAO_ABI,
+        address: dao.address,
+        abi: dao.abi,
         functionName: "vote",
         args: [BigInt(proposalId), support],
       });
@@ -199,10 +190,10 @@ function ProposalVote({ proposalId }: { proposalId: number }) {
   );
 }
 
-function ProposalCard({ id }: { id: number }) {
+function ProposalCard({ id, dao }: { id: number; dao: { address: `0x${string}`; abi: typeof DAO_ABI } }) {
   const { data, isError, isLoading } = useReadContract({
-    address: DAO_ADDRESS,
-    abi: DAO_ABI,
+    address: dao.address,
+    abi: dao.abi,
     functionName: "proposals",
     args: [BigInt(id)],
   });
@@ -228,15 +219,15 @@ function ProposalCard({ id }: { id: number }) {
         <span className="text-red-600">Against: {againstVotes.toString()}</span>
         <span className="text-zinc-500">Abstain: {abstainVotes.toString()}</span>
       </div>
-      <ProposalVote proposalId={id} />
+      <ProposalVote proposalId={id} dao={dao} />
     </div>
   );
 }
 
-function ProposalList() {
+function ProposalList({ dao }: { dao: { address: `0x${string}`; abi: typeof DAO_ABI } }) {
   const { data: count } = useReadContract({
-    address: DAO_ADDRESS,
-    abi: DAO_ABI,
+    address: dao.address,
+    abi: dao.abi,
     functionName: "proposalCount",
   });
 
@@ -247,26 +238,26 @@ function ProposalList() {
   return (
     <div className="space-y-3">
       {ids.map((id) => (
-        <ProposalCard key={id} id={id} />
+        <ProposalCard key={id} id={id} dao={dao} />
       ))}
     </div>
   );
 }
 
-function DaoStats() {
+function DaoStats({ dao }: { dao: { address: `0x${string}`; abi: typeof DAO_ABI } }) {
   const { data: votingPeriod } = useReadContract({
-    address: DAO_ADDRESS,
-    abi: DAO_ABI,
+    address: dao.address,
+    abi: dao.abi,
     functionName: "votingPeriod",
   });
   const { data: threshold } = useReadContract({
-    address: DAO_ADDRESS,
-    abi: DAO_ABI,
+    address: dao.address,
+    abi: dao.abi,
     functionName: "proposalThreshold",
   });
   const { data: count } = useReadContract({
-    address: DAO_ADDRESS,
-    abi: DAO_ABI,
+    address: dao.address,
+    abi: dao.abi,
     functionName: "proposalCount",
   });
 
@@ -288,12 +279,12 @@ function DaoStats() {
   );
 }
 
-function EventFeed() {
+function EventFeed({ dao }: { dao: { address: `0x${string}`; abi: typeof DAO_ABI } }) {
   const [events, setEvents] = useState<{ id: number; description: string }[]>([]);
 
   useWatchContractEvent({
-    address: DAO_ADDRESS,
-    abi: DAO_ABI,
+    address: dao.address,
+    abi: dao.abi,
     eventName: "ProposalCreated",
     onLogs(logs) {
       for (const log of logs) {
@@ -325,29 +316,40 @@ function EventFeed() {
   );
 }
 
+function NetworkWarning() {
+  return (
+    <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-center text-sm text-amber-800">
+      DAO contracts are only deployed on <strong>Sepolia</strong>. Switch your wallet network.
+    </div>
+  );
+}
+
 export default function DaoPage() {
   const { isConnected } = useAccount();
+  const { dao, hasDAO } = useContracts();
 
   return (
     <div className="mx-auto max-w-3xl space-y-8 px-4 py-10">
       <div>
         <h1 className="text-2xl font-semibold">DAO Governance</h1>
         <p className="mt-1 text-sm text-zinc-500">
-          Interact with SimpleDAO on Hardhat local network
+          Create proposals, vote, and manage DAO governance
         </p>
       </div>
 
-      {isConnected ? (
-        <>
-          <DaoStats />
-          <EventFeed />
-          <NewProposal />
-          <ProposalList />
-        </>
-      ) : (
+      {!isConnected ? (
         <p className="text-center text-sm text-zinc-400">
           Connect your wallet to create proposals and vote.
         </p>
+      ) : !hasDAO ? (
+        <NetworkWarning />
+      ) : (
+        <>
+          <DaoStats dao={dao} />
+          <EventFeed dao={dao} />
+          <NewProposal dao={dao} />
+          <ProposalList dao={dao} />
+        </>
       )}
     </div>
   );

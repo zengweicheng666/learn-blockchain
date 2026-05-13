@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useAccount } from "wagmi";
 import { useReadContract, useWriteContract } from "wagmi";
 import { formatEther, parseEther } from "viem";
-import { MARKETPLACE_ABI, MARKETPLACE_ADDRESS } from "@/lib/contracts";
+import { useContracts, MARKETPLACE_ABI } from "@/lib/contracts";
 
 function TxStatus({ status }: { status: "idle" | "pending" | "confirmed" | "error" }) {
   if (status === "idle") return null;
@@ -15,7 +15,7 @@ function TxStatus({ status }: { status: "idle" | "pending" | "confirmed" | "erro
   );
 }
 
-function ListItemForm() {
+function ListItemForm({ marketplace }: { marketplace: { address: `0x${string}`; abi: typeof MARKETPLACE_ABI } }) {
   const [nftContract, setNftContract] = useState("");
   const [tokenId, setTokenId] = useState("");
   const [price, setPrice] = useState("");
@@ -30,8 +30,8 @@ function ListItemForm() {
     setStatus("pending");
     try {
       await writeContractAsync({
-        address: MARKETPLACE_ADDRESS,
-        abi: MARKETPLACE_ABI,
+        address: marketplace.address,
+        abi: marketplace.abi,
         functionName: "listItem",
         args: [nftContract as `0x${string}`, BigInt(tokenId), parseEther(price)],
       });
@@ -84,15 +84,15 @@ function ListItemForm() {
   );
 }
 
-function LookupListing() {
+function LookupListing({ marketplace }: { marketplace: { address: `0x${string}`; abi: typeof MARKETPLACE_ABI } }) {
   const [listingId, setListingId] = useState("");
   const [status, setStatus] = useState<"idle" | "pending" | "confirmed" | "error">("idle");
   const { address } = useAccount();
   const { writeContractAsync } = useWriteContract();
 
   const { data: listing, refetch } = useReadContract({
-    address: MARKETPLACE_ADDRESS,
-    abi: MARKETPLACE_ABI,
+    address: marketplace.address,
+    abi: marketplace.abi,
     functionName: "getListing",
     args: listingId ? [BigInt(listingId)] : undefined,
   });
@@ -105,8 +105,8 @@ function LookupListing() {
     setStatus("pending");
     try {
       await writeContractAsync({
-        address: MARKETPLACE_ADDRESS,
-        abi: MARKETPLACE_ABI,
+        address: marketplace.address,
+        abi: marketplace.abi,
         functionName: "buyItem",
         args: [BigInt(listingId)],
         value: price + (price * 250n) / 10000n,
@@ -123,8 +123,8 @@ function LookupListing() {
     setStatus("pending");
     try {
       await writeContractAsync({
-        address: MARKETPLACE_ADDRESS,
-        abi: MARKETPLACE_ABI,
+        address: marketplace.address,
+        abi: marketplace.abi,
         functionName: "cancelListing",
         args: [BigInt(listingId)],
       });
@@ -181,27 +181,38 @@ function LookupListing() {
   );
 }
 
+function NetworkWarning() {
+  return (
+    <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-center text-sm text-amber-800">
+      Marketplace contracts are only deployed on <strong>Hardhat Local</strong>. Switch your wallet network.
+    </div>
+  );
+}
+
 export default function ListingsPage() {
   const { isConnected } = useAccount();
+  const { marketplace, hasMarketplace, chainName } = useContracts();
 
   return (
     <div className="mx-auto max-w-3xl space-y-8 px-4 py-10">
       <div>
         <h1 className="text-2xl font-semibold">Fixed-Price Listings</h1>
         <p className="mt-1 text-sm text-zinc-500">
-          List NFTs for sale or browse existing listings
+          List NFTs for sale or browse existing listings ({chainName})
         </p>
       </div>
 
-      {isConnected ? (
-        <>
-          <ListItemForm />
-          <LookupListing />
-        </>
-      ) : (
+      {!isConnected ? (
         <p className="text-center text-sm text-zinc-400">
           Connect your wallet to list or buy NFTs.
         </p>
+      ) : !hasMarketplace ? (
+        <NetworkWarning />
+      ) : (
+        <>
+          <ListItemForm marketplace={marketplace} />
+          <LookupListing marketplace={marketplace} />
+        </>
       )}
     </div>
   );

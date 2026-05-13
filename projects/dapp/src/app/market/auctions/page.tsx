@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useAccount } from "wagmi";
 import { useReadContract, useWriteContract } from "wagmi";
 import { formatEther, parseEther } from "viem";
-import { AUCTION_MANAGER_ABI, AUCTION_MANAGER_ADDRESS } from "@/lib/contracts";
+import { useContracts, AUCTION_MANAGER_ABI } from "@/lib/contracts";
 
 function TxStatus({ status }: { status: "idle" | "pending" | "confirmed" | "error" }) {
   if (status === "idle") return null;
@@ -15,7 +15,7 @@ function TxStatus({ status }: { status: "idle" | "pending" | "confirmed" | "erro
   );
 }
 
-function CreateAuctionForm() {
+function CreateAuctionForm({ auctionMgr }: { auctionMgr: { address: `0x${string}`; abi: typeof AUCTION_MANAGER_ABI } }) {
   const [nftContract, setNftContract] = useState("");
   const [tokenId, setTokenId] = useState("");
   const [startingBid, setStartingBid] = useState("");
@@ -31,8 +31,8 @@ function CreateAuctionForm() {
     setStatus("pending");
     try {
       await writeContractAsync({
-        address: AUCTION_MANAGER_ADDRESS,
-        abi: AUCTION_MANAGER_ABI,
+        address: auctionMgr.address,
+        abi: auctionMgr.abi,
         functionName: "createAuction",
         args: [nftContract as `0x${string}`, BigInt(tokenId), parseEther(startingBid), BigInt(duration)],
       });
@@ -96,7 +96,7 @@ function CreateAuctionForm() {
   );
 }
 
-function LookupAuction() {
+function LookupAuction({ auctionMgr }: { auctionMgr: { address: `0x${string}`; abi: typeof AUCTION_MANAGER_ABI } }) {
   const [auctionId, setAuctionId] = useState("");
   const [bidAmount, setBidAmount] = useState("");
   const [actionStatus, setActionStatus] = useState<"idle" | "pending" | "confirmed" | "error">("idle");
@@ -104,16 +104,16 @@ function LookupAuction() {
   const { writeContractAsync } = useWriteContract();
 
   const { data: auction, refetch } = useReadContract({
-    address: AUCTION_MANAGER_ADDRESS,
-    abi: AUCTION_MANAGER_ABI,
+    address: auctionMgr.address,
+    abi: auctionMgr.abi,
     functionName: "getAuction",
     args: auctionId ? [BigInt(auctionId)] : undefined,
     query: { enabled: !!auctionId },
   });
 
   const { data: pendingReturn } = useReadContract({
-    address: AUCTION_MANAGER_ADDRESS,
-    abi: AUCTION_MANAGER_ABI,
+    address: auctionMgr.address,
+    abi: auctionMgr.abi,
     functionName: "getPendingReturn",
     args: auctionId && address ? [BigInt(auctionId), address] : undefined,
     query: { enabled: !!auctionId && !!address },
@@ -124,8 +124,8 @@ function LookupAuction() {
     setActionStatus("pending");
     try {
       await writeContractAsync({
-        address: AUCTION_MANAGER_ADDRESS,
-        abi: AUCTION_MANAGER_ABI,
+        address: auctionMgr.address,
+        abi: auctionMgr.abi,
         functionName: "placeBid",
         args: [BigInt(auctionId)],
         value: parseEther(bidAmount),
@@ -142,8 +142,8 @@ function LookupAuction() {
     setActionStatus("pending");
     try {
       await writeContractAsync({
-        address: AUCTION_MANAGER_ADDRESS,
-        abi: AUCTION_MANAGER_ABI,
+        address: auctionMgr.address,
+        abi: auctionMgr.abi,
         functionName: "endAuction",
         args: [BigInt(auctionId)],
       });
@@ -159,8 +159,8 @@ function LookupAuction() {
     setActionStatus("pending");
     try {
       await writeContractAsync({
-        address: AUCTION_MANAGER_ADDRESS,
-        abi: AUCTION_MANAGER_ABI,
+        address: auctionMgr.address,
+        abi: auctionMgr.abi,
         functionName: "withdrawBid",
         args: [BigInt(auctionId)],
       });
@@ -251,27 +251,38 @@ function LookupAuction() {
   );
 }
 
+function NetworkWarning() {
+  return (
+    <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-center text-sm text-amber-800">
+      Auction contracts are only deployed on <strong>Hardhat Local</strong>. Switch your wallet network.
+    </div>
+  );
+}
+
 export default function AuctionsPage() {
   const { isConnected } = useAccount();
+  const { auctionManager, hasAuction, chainName } = useContracts();
 
   return (
     <div className="mx-auto max-w-3xl space-y-8 px-4 py-10">
       <div>
         <h1 className="text-2xl font-semibold">Auctions</h1>
         <p className="mt-1 text-sm text-zinc-500">
-          Create new auctions or bid on existing ones
+          Create new auctions or bid on existing ones ({chainName})
         </p>
       </div>
 
-      {isConnected ? (
-        <>
-          <CreateAuctionForm />
-          <LookupAuction />
-        </>
-      ) : (
+      {!isConnected ? (
         <p className="text-center text-sm text-zinc-400">
           Connect your wallet to create or bid on auctions.
         </p>
+      ) : !hasAuction ? (
+        <NetworkWarning />
+      ) : (
+        <>
+          <CreateAuctionForm auctionMgr={auctionManager} />
+          <LookupAuction auctionMgr={auctionManager} />
+        </>
       )}
     </div>
   );

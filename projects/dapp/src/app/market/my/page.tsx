@@ -3,21 +3,34 @@
 import { useAccount } from "wagmi";
 import { useReadContract } from "wagmi";
 import { formatEther } from "viem";
-import { MARKETPLACE_ABI, MARKETPLACE_ADDRESS, AUCTION_MANAGER_ABI, AUCTION_MANAGER_ADDRESS } from "@/lib/contracts";
+import { useContracts, MARKETPLACE_ABI, MARKETPLACE_ADDRESS, AUCTION_MANAGER_ABI, AUCTION_MANAGER_ADDRESS } from "@/lib/contracts";
+
+function NetworkWarning() {
+  return (
+    <div className="mx-auto max-w-3xl px-4 py-20 text-center text-amber-800">
+      <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm">
+        Marketplace contracts are only deployed on <strong>Hardhat Local</strong>. Switch your wallet network.
+      </div>
+    </div>
+  );
+}
 
 export default function MyPage() {
   const { address, isConnected } = useAccount();
+  const { hasMarketplace, chainName } = useContracts();
 
   const { data: listingCount } = useReadContract({
     address: MARKETPLACE_ADDRESS,
     abi: MARKETPLACE_ABI,
     functionName: "listingCount",
+    query: { enabled: hasMarketplace },
   });
 
   const { data: auctionCount } = useReadContract({
     address: AUCTION_MANAGER_ADDRESS,
     abi: AUCTION_MANAGER_ABI,
     functionName: "auctionCount",
+    query: { enabled: hasMarketplace },
   });
 
   if (!isConnected) {
@@ -28,12 +41,14 @@ export default function MyPage() {
     );
   }
 
+  if (!hasMarketplace) return <NetworkWarning />;
+
   return (
     <div className="mx-auto max-w-3xl space-y-8 px-4 py-10">
       <div>
         <h1 className="text-2xl font-semibold">My Items</h1>
         <p className="mt-1 text-sm text-zinc-500">
-          Your listings, auctions, and pending refunds
+          Your listings, auctions, and pending refunds ({chainName})
         </p>
       </div>
 

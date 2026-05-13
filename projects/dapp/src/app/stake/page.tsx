@@ -8,7 +8,8 @@ import {
   useWatchContractEvent,
 } from "wagmi";
 import { formatEther, parseEther } from "viem";
-import { STAKING_ABI, STAKING_ADDRESS } from "@/lib/contracts";
+import { useContracts, type STAKING_ABI } from "@/lib/contracts";
+import type { Abi } from "viem";
 
 function TxStatus({
   status,
@@ -71,31 +72,31 @@ function StatCard({ label, value }: { label: string; value: string }) {
   );
 }
 
-function StakingDashboard() {
+function StakingDashboard({ staking }: { staking: { address: `0x${string}`; abi: typeof STAKING_ABI } }) {
   const { address } = useAccount();
   const { data: ethBalance } = useBalance({ address });
 
   const { data: totalEthStaked } = useReadContract({
-    address: STAKING_ADDRESS,
-    abi: STAKING_ABI,
+    address: staking.address,
+    abi: staking.abi,
     functionName: "totalEthStaked",
   });
 
   const { data: apr } = useReadContract({
-    address: STAKING_ADDRESS,
-    abi: STAKING_ABI,
+    address: staking.address,
+    abi: staking.abi,
     functionName: "apr",
   });
 
   const { data: exchangeRate } = useReadContract({
-    address: STAKING_ADDRESS,
-    abi: STAKING_ABI,
+    address: staking.address,
+    abi: staking.abi,
     functionName: "getExchangeRate",
   });
 
   const { data: stEthBalance } = useReadContract({
-    address: STAKING_ADDRESS,
-    abi: STAKING_ABI,
+    address: staking.address,
+    abi: staking.abi,
     functionName: "balanceOf",
     args: address ? [address] : undefined,
   });
@@ -122,7 +123,7 @@ function StakingDashboard() {
   );
 }
 
-function StakeForm() {
+function StakeForm({ staking }: { staking: { address: `0x${string}`; abi: typeof STAKING_ABI } }) {
   const [amount, setAmount] = useState("");
   const [txStatus, setTxStatus] = useState<"idle" | "pending" | "confirming" | "confirmed" | "error">("idle");
   const [txHash, setTxHash] = useState<string>();
@@ -136,8 +137,8 @@ function StakeForm() {
     setTxStatus("pending");
     try {
       const hash = await writeContractAsync({
-        address: STAKING_ADDRESS,
-        abi: STAKING_ABI,
+        address: staking.address,
+        abi: staking.abi,
         functionName: "stake",
         value: parseEther(amount),
       });
@@ -177,7 +178,7 @@ function StakeForm() {
   );
 }
 
-function UnstakeForm() {
+function UnstakeForm({ staking }: { staking: { address: `0x${string}`; abi: typeof STAKING_ABI } }) {
   const [amount, setAmount] = useState("");
   const [txStatus, setTxStatus] = useState<"idle" | "pending" | "confirming" | "confirmed" | "error">("idle");
   const [txHash, setTxHash] = useState<string>();
@@ -191,8 +192,8 @@ function UnstakeForm() {
     setTxStatus("pending");
     try {
       const hash = await writeContractAsync({
-        address: STAKING_ADDRESS,
-        abi: STAKING_ABI,
+        address: staking.address,
+        abi: staking.abi,
         functionName: "unstake",
         args: [parseEther(amount)],
       });
@@ -232,7 +233,7 @@ function UnstakeForm() {
   );
 }
 
-function AccrueYieldButton() {
+function AccrueYieldButton({ staking }: { staking: { address: `0x${string}`; abi: typeof STAKING_ABI } }) {
   const [txStatus, setTxStatus] = useState<"idle" | "pending" | "confirming" | "confirmed" | "error">("idle");
   const [txHash, setTxHash] = useState<string>();
 
@@ -242,8 +243,8 @@ function AccrueYieldButton() {
     setTxStatus("pending");
     try {
       const hash = await writeContractAsync({
-        address: STAKING_ADDRESS,
-        abi: STAKING_ABI,
+        address: staking.address,
+        abi: staking.abi,
         functionName: "accrueYield",
       });
       setTxHash(hash);
@@ -271,12 +272,12 @@ function AccrueYieldButton() {
   );
 }
 
-function EventFeed() {
+function EventFeed({ staking }: { staking: { address: `0x${string}`; abi: typeof STAKING_ABI } }) {
   const [events, setEvents] = useState<{ yieldAmount: string; newTotal: string }[]>([]);
 
   useWatchContractEvent({
-    address: STAKING_ADDRESS,
-    abi: STAKING_ABI,
+    address: staking.address,
+    abi: staking.abi,
     eventName: "YieldAccrued",
     onLogs(logs) {
       for (const log of logs) {
@@ -313,8 +314,17 @@ function EventFeed() {
   );
 }
 
+function NetworkWarning() {
+  return (
+    <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-center text-sm text-amber-800">
+      Staking contracts are only deployed on <strong>Sepolia</strong>. Switch your wallet network.
+    </div>
+  );
+}
+
 export default function StakePage() {
   const { isConnected } = useAccount();
+  const { staking, hasStaking } = useContracts();
 
   return (
     <div className="mx-auto max-w-3xl space-y-8 px-4 py-10">
@@ -325,20 +335,22 @@ export default function StakePage() {
         </p>
       </div>
 
-      {isConnected ? (
-        <>
-          <StakingDashboard />
-          <EventFeed />
-          <div className="grid gap-6 md:grid-cols-2">
-            <StakeForm />
-            <UnstakeForm />
-          </div>
-          <AccrueYieldButton />
-        </>
-      ) : (
+      {!isConnected ? (
         <p className="text-center text-sm text-zinc-400">
           Connect your wallet to stake, unstake, or accrue yield.
         </p>
+      ) : !hasStaking ? (
+        <NetworkWarning />
+      ) : (
+        <>
+          <StakingDashboard staking={staking} />
+          <EventFeed staking={staking} />
+          <div className="grid gap-6 md:grid-cols-2">
+            <StakeForm staking={staking} />
+            <UnstakeForm staking={staking} />
+          </div>
+          <AccrueYieldButton staking={staking} />
+        </>
       )}
     </div>
   );

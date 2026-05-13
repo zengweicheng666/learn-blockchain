@@ -2,6 +2,7 @@
 
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useAccount, useBalance, useBlockNumber } from "wagmi";
+import { useContracts } from "@/lib/contracts";
 
 function WalletInfo() {
   const { address, isConnected } = useAccount();
@@ -29,6 +30,11 @@ function WalletInfo() {
   );
 }
 
+function ChainName() {
+  const { chainName } = useContracts();
+  return <p className="text-lg text-zinc-600 dark:text-zinc-400">{chainName}</p>;
+}
+
 function ChainInfo() {
   const { data: blockNumber } = useBlockNumber({ watch: true });
 
@@ -51,9 +57,7 @@ export default function Home() {
         <h1 className="text-3xl font-semibold tracking-tight text-black dark:text-zinc-50">
           Blockchain DApp
         </h1>
-        <p className="text-lg text-zinc-600 dark:text-zinc-400">
-          Sepolia Testnet
-        </p>
+        <ChainName />
 
         <div className="flex flex-col items-center gap-4">
           <ConnectButton />

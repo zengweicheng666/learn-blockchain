@@ -1,6 +1,28 @@
-export const DAO_ADDRESS = "0x8A791620dd6260079BF849Dc5567aDC3F2FdC318";
-export const VOTE_TOKEN_ADDRESS = "0x0165878A594ca255338adfa4d48449f69242Eb8F";
-export const STAKING_ADDRESS = "0x9A9f2CCfdE556A7E9Ff0848998Aa4a0CFD8863AE";
+import { useChainId } from "wagmi";
+
+// ─── 配置说明 ─────────────────────────────────────
+//
+// 合约地址按链 ID 分区管理，新增网络或合约只需在 ADDRESSES 中添加：
+//
+//   const ADDRESSES: Record<number, Record<string, `0x${string}`>> = {
+//     31337: {                                    // Hardhat local
+//       MARKETPLACE: "0x5FbDB2315678...",
+//       AUCTION_MANAGER: "0xe7f1725E7734...",
+//     },
+//     11155111: {                                 // Sepolia
+//       DAO: "0x8A791620dd6260...",
+//       STAKING: "0x9A9f2CCfdE556...",
+//     },
+//     84532: {                                    // 示例：Base Sepolia
+//       MARKETPLACE: "0x...",
+//     },
+//   };
+//
+// 部署新合约后，将返回的地址填入对应网络。
+// useContracts() hook 会根据钱包当前连接的链自动返回正确配置。
+// 网络不支持的合约会显示 "Not available" 提示。
+//
+// ─── ABI 定义（不依赖链，保持不变） ───────────────────────
 
 export const VOTE_TOKEN_ABI = [
   { inputs: [], stateMutability: "nonpayable", type: "constructor" },
@@ -210,9 +232,6 @@ export const STAKING_ABI = [
   {anonymous:false,inputs:[{indexed:false,internalType:"uint256",name:"yieldAmount",type:"uint256"},{indexed:false,internalType:"uint256",name:"newTotalEthStaked",type:"uint256"}],name:"YieldAccrued",type:"event"},
 ] as const;
 
-export const MARKETPLACE_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
-export const AUCTION_MANAGER_ADDRESS = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
-
 export const MARKETPLACE_ABI = [
   { inputs: [{ internalType: "uint256", name: "_initialFee", type: "uint256" }], stateMutability: "nonpayable", type: "constructor" },
   { inputs: [], name: "listingCount", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" },
@@ -244,3 +263,74 @@ export const AUCTION_MANAGER_ABI = [
   { anonymous: false, inputs: [{ indexed: true, internalType: "uint256", name: "auctionId", type: "uint256" }, { indexed: true, internalType: "address", name: "bidder", type: "address" }, { indexed: false, internalType: "uint256", name: "amount", type: "uint256" }], name: "BidWithdrawn", type: "event" },
   { anonymous: false, inputs: [{ indexed: true, internalType: "uint256", name: "auctionId", type: "uint256" }, { indexed: false, internalType: "address", name: "winner", type: "address" }, { indexed: false, internalType: "uint256", name: "winningBid", type: "uint256" }, { indexed: false, internalType: "uint256", name: "fee", type: "uint256" }], name: "AuctionEnded", type: "event" },
 ] as const;
+
+// ─── 链感知地址配置 ───────────────────────────────
+
+const ADDRESSES: Record<number, Record<string, `0x${string}`>> = {
+  // Hardhat 本地网络
+  31337: {
+    MARKETPLACE: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+    AUCTION_MANAGER: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+    DAO: "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
+    VOTE_TOKEN: "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
+    STAKING: "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853",
+  },
+  // Sepolia 测试网
+  11155111: {
+    DAO: "0x8A791620dd6260079BF849Dc5567aDC3F2FdC318",
+    VOTE_TOKEN: "0x0165878A594ca255338adfa4d48449f69242Eb8F",
+    STAKING: "0x9A9f2CCfdE556A7E9Ff0848998Aa4a0CFD8863AE",
+  },
+};
+
+// ─── 网络名称映射（用于 UI 提示） ───────────────────
+
+export const CHAIN_NAMES: Record<number, string> = {
+  31337: "Hardhat Local",
+  11155111: "Sepolia",
+};
+
+export const CHAIN_RPC: Record<number, string> = {
+  31337: "http://127.0.0.1:8545",
+  11155111: "https://ethereum-sepolia-rpc.publicnode.com",
+};
+
+// ─── 兼容旧版导入（默认 Hardhat 地址，保留不破坏已有代码） ──
+
+export const DAO_ADDRESS = ADDRESSES[11155111].DAO!;
+export const VOTE_TOKEN_ADDRESS = ADDRESSES[11155111].VOTE_TOKEN!;
+export const STAKING_ADDRESS = ADDRESSES[11155111].STAKING!;
+export const MARKETPLACE_ADDRESS = ADDRESSES[31337].MARKETPLACE!;
+export const AUCTION_MANAGER_ADDRESS = ADDRESSES[31337].AUCTION_MANAGER!;
+
+// ─── useContracts Hook ──────────────────────────
+
+export function useContracts() {
+  const chainId = useChainId();
+  const addrs = ADDRESSES[chainId] ?? {};
+
+  return {
+    chainId,
+    chainName: CHAIN_NAMES[chainId] ?? `Chain ${chainId}`,
+
+    /** 当前链是否支持该合约 */
+    hasDAO: !!addrs.DAO,
+    hasStaking: !!addrs.STAKING,
+    hasMarketplace: !!addrs.MARKETPLACE,
+    hasAuction: !!addrs.AUCTION_MANAGER,
+
+    /** 当前链所支持的合约列表（用于导航展示） */
+    availableModules: [
+      addrs.DAO && "dao",
+      addrs.STAKING && "stake",
+      addrs.MARKETPLACE && "market",
+    ].filter(Boolean) as string[],
+
+    /** 合约配置（address + abi 打包） */
+    dao:      { address: addrs.DAO!, abi: DAO_ABI },
+    voteToken: { address: addrs.VOTE_TOKEN!, abi: VOTE_TOKEN_ABI },
+    staking:  { address: addrs.STAKING!, abi: STAKING_ABI },
+    marketplace:   { address: addrs.MARKETPLACE!, abi: MARKETPLACE_ABI },
+    auctionManager: { address: addrs.AUCTION_MANAGER!, abi: AUCTION_MANAGER_ABI },
+  };
+}
