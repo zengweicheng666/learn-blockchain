@@ -209,3 +209,38 @@ export const STAKING_ABI = [
   {anonymous:false,inputs:[{indexed:true,internalType:"address",name:"user",type:"address"},{indexed:false,internalType:"uint256",name:"stEthAmount",type:"uint256"},{indexed:false,internalType:"uint256",name:"ethAmount",type:"uint256"}],name:"Unstaked",type:"event"},
   {anonymous:false,inputs:[{indexed:false,internalType:"uint256",name:"yieldAmount",type:"uint256"},{indexed:false,internalType:"uint256",name:"newTotalEthStaked",type:"uint256"}],name:"YieldAccrued",type:"event"},
 ] as const;
+
+export const MARKETPLACE_ADDRESS = "0x...";
+export const AUCTION_MANAGER_ADDRESS = "0x...";
+
+export const MARKETPLACE_ABI = [
+  { inputs: [{ internalType: "uint256", name: "_initialFee", type: "uint256" }], stateMutability: "nonpayable", type: "constructor" },
+  { inputs: [], name: "listingCount", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" },
+  { inputs: [{ internalType: "address", name: "nftContract", type: "address" }, { internalType: "uint256", name: "tokenId", type: "uint256" }, { internalType: "uint256", name: "price", type: "uint256" }], name: "listItem", outputs: [{ internalType: "uint256", name: "listingId", type: "uint256" }], stateMutability: "nonpayable", type: "function" },
+  { inputs: [{ internalType: "uint256", name: "listingId", type: "uint256" }], name: "buyItem", outputs: [], stateMutability: "payable", type: "function" },
+  { inputs: [{ internalType: "uint256", name: "listingId", type: "uint256" }], name: "cancelListing", outputs: [], stateMutability: "nonpayable", type: "function" },
+  { inputs: [{ internalType: "uint256", name: "listingId", type: "uint256" }], name: "getListing", outputs: [{ internalType: "address", name: "seller", type: "address" }, { internalType: "address", name: "nftContract", type: "address" }, { internalType: "uint256", name: "tokenId", type: "uint256" }, { internalType: "uint256", name: "price", type: "uint256" }, { internalType: "bool", name: "active", type: "bool" }], stateMutability: "view", type: "function" },
+  { inputs: [], name: "platformFee", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" },
+  { inputs: [], name: "accumulatedFees", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" },
+  { inputs: [{ internalType: "uint256", name: "_newFee", type: "uint256" }], name: "setPlatformFee", outputs: [], stateMutability: "nonpayable", type: "function" },
+  { inputs: [], name: "withdrawFees", outputs: [], stateMutability: "nonpayable", type: "function" },
+  { anonymous: false, inputs: [{ indexed: true, internalType: "uint256", name: "listingId", type: "uint256" }, { indexed: true, internalType: "address", name: "seller", type: "address" }, { indexed: true, internalType: "address", name: "nftContract", type: "address" }, { indexed: false, internalType: "uint256", name: "tokenId", type: "uint256" }, { indexed: false, internalType: "uint256", name: "price", type: "uint256" }], name: "Listed", type: "event" },
+  { anonymous: false, inputs: [{ indexed: true, internalType: "uint256", name: "listingId", type: "uint256" }, { indexed: true, internalType: "address", name: "buyer", type: "address" }, { indexed: true, internalType: "address", name: "seller", type: "address" }, { indexed: false, internalType: "uint256", name: "price", type: "uint256" }, { indexed: false, internalType: "uint256", name: "fee", type: "uint256" }], name: "Bought", type: "event" },
+  { anonymous: false, inputs: [{ indexed: true, internalType: "uint256", name: "listingId", type: "uint256" }], name: "ListingCancelled", type: "event" },
+] as const;
+
+export const AUCTION_MANAGER_ABI = [
+  { inputs: [{ internalType: "uint256", name: "_initialFee", type: "uint256" }], stateMutability: "nonpayable", type: "constructor" },
+  { inputs: [], name: "auctionCount", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" },
+  { inputs: [{ internalType: "address", name: "nftContract", type: "address" }, { internalType: "uint256", name: "tokenId", type: "uint256" }, { internalType: "uint256", name: "startingBid", type: "uint256" }, { internalType: "uint256", name: "duration", type: "uint256" }], name: "createAuction", outputs: [{ internalType: "uint256", name: "auctionId", type: "uint256" }], stateMutability: "nonpayable", type: "function" },
+  { inputs: [{ internalType: "uint256", name: "auctionId", type: "uint256" }], name: "placeBid", outputs: [], stateMutability: "payable", type: "function" },
+  { inputs: [{ internalType: "uint256", name: "auctionId", type: "uint256" }], name: "withdrawBid", outputs: [], stateMutability: "nonpayable", type: "function" },
+  { inputs: [{ internalType: "uint256", name: "auctionId", type: "uint256" }], name: "endAuction", outputs: [], stateMutability: "nonpayable", type: "function" },
+  { inputs: [{ internalType: "uint256", name: "auctionId", type: "uint256" }], name: "getAuction", outputs: [{ internalType: "address", name: "seller", type: "address" }, { internalType: "address", name: "nftContract", type: "address" }, { internalType: "uint256", name: "tokenId", type: "uint256" }, { internalType: "uint256", name: "startingBid", type: "uint256" }, { internalType: "address", name: "highestBidder", type: "address" }, { internalType: "uint256", name: "highestBid", type: "uint256" }, { internalType: "uint256", name: "endTime", type: "uint256" }, { internalType: "bool", name: "active", type: "bool" }, { internalType: "bool", name: "ended", type: "bool" }], stateMutability: "view", type: "function" },
+  { inputs: [{ internalType: "uint256", name: "auctionId", type: "uint256" }, { internalType: "address", name: "bidder", type: "address" }], name: "getPendingReturn", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" },
+  { inputs: [], name: "accumulatedFees", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" },
+  { anonymous: false, inputs: [{ indexed: true, internalType: "uint256", name: "auctionId", type: "uint256" }, { indexed: true, internalType: "address", name: "seller", type: "address" }, { indexed: true, internalType: "address", name: "nftContract", type: "address" }, { indexed: false, internalType: "uint256", name: "tokenId", type: "uint256" }, { indexed: false, internalType: "uint256", name: "startingBid", type: "uint256" }, { indexed: false, internalType: "uint256", name: "endTime", type: "uint256" }], name: "AuctionCreated", type: "event" },
+  { anonymous: false, inputs: [{ indexed: true, internalType: "uint256", name: "auctionId", type: "uint256" }, { indexed: true, internalType: "address", name: "bidder", type: "address" }, { indexed: false, internalType: "uint256", name: "amount", type: "uint256" }], name: "BidPlaced", type: "event" },
+  { anonymous: false, inputs: [{ indexed: true, internalType: "uint256", name: "auctionId", type: "uint256" }, { indexed: true, internalType: "address", name: "bidder", type: "address" }, { indexed: false, internalType: "uint256", name: "amount", type: "uint256" }], name: "BidWithdrawn", type: "event" },
+  { anonymous: false, inputs: [{ indexed: true, internalType: "uint256", name: "auctionId", type: "uint256" }, { indexed: false, internalType: "address", name: "winner", type: "address" }, { indexed: false, internalType: "uint256", name: "winningBid", type: "uint256" }, { indexed: false, internalType: "uint256", name: "fee", type: "uint256" }], name: "AuctionEnded", type: "event" },
+] as const;

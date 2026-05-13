@@ -8,6 +8,7 @@ const links = [
   { href: "/", label: "Home" },
   { href: "/dao", label: "DAO" },
   { href: "/stake", label: "Stake" },
+  { href: "/market", label: "Market" },
 ];
 
 export function Nav() {
